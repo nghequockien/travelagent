@@ -198,9 +198,15 @@ class SemanticKernelTravelAgent:
     SUPPORTED_CONTENT_TYPES = ['text', 'text/plain']
 
     def __init__(self):
-        # Configure the chat completion service explicitly
-        # It uses Azure OpenAI by default. Please change to ChatServices.OPENAI in case you want to use OpenAI service.
-        chat_service = get_chat_completion_service(ChatServices.AZURE_OPENAI)
+        # Configure the chat completion service from the CHAT_SERVICE environment variable.
+        # Supported values: 'azure_openai' (default), 'openai'
+        raw_service = os.getenv('CHAT_SERVICE', ChatServices.AZURE_OPENAI.value)
+        try:
+            service_name = ChatServices(raw_service)
+        except ValueError:
+            valid = [e.value for e in ChatServices]
+            raise ValueError(f"Invalid CHAT_SERVICE='{raw_service}'. Must be one of: {valid}")
+        chat_service = get_chat_completion_service(service_name)
 
         currency_exchange_agent = ChatCompletionAgent(
             service=chat_service,
