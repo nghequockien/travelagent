@@ -42,7 +42,10 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
             task = new_task(context.message)
             await event_queue.enqueue_event(task)
 
-        async for partial in self.agent.stream(query, task.contextId):
+        task_context_id = getattr(task, 'context_id', None) or getattr(task, 'contextId', None)
+        task_id = task.id
+
+        async for partial in self.agent.stream(query, task_context_id):
             require_input = partial['require_user_input']
             is_done = partial['is_task_complete']
             text_content = partial['content']
@@ -54,21 +57,21 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
                             state=TaskState.input_required,
                             message=new_agent_text_message(
                                 text_content,
-                                task.contextId,
-                                task.id,
+                                task_context_id,
+                                task_id,
                             ),
                         ),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        contextId=task_context_id,
+                        taskId=task_id,
                     )
                 )
             elif is_done:
                 await event_queue.enqueue_event(
                     TaskArtifactUpdateEvent(
                         append=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        contextId=task_context_id,
+                        taskId=task_id,
                         lastChunk=True,
                         artifact=new_text_artifact(
                             name='current_result',
@@ -81,8 +84,8 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
                     TaskStatusUpdateEvent(
                         status=TaskStatus(state=TaskState.completed),
                         final=True,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        contextId=task_context_id,
+                        taskId=task_id,
                     )
                 )
             else:
@@ -92,13 +95,13 @@ class SemanticKernelTravelAgentExecutor(AgentExecutor):
                             state=TaskState.working,
                             message=new_agent_text_message(
                                 text_content,
-                                task.contextId,
-                                task.id,
+                                task_context_id,
+                                task_id,
                             ),
                         ),
                         final=False,
-                        contextId=task.contextId,
-                        taskId=task.id,
+                        contextId=task_context_id,
+                        taskId=task_id,
                     )
                 )
 
