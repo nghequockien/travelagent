@@ -44,7 +44,7 @@ async def lifespan(app: FastAPI):
     
     logger.info(
         f"A2A server mounted at /a2a - Agent Card available at "
-        f"http://{host}:{port}/a2a/"
+        f"http://{host}:{port}/.well-known/agent-card.json"
     )
     
     yield
@@ -89,9 +89,17 @@ async def health_check():
     return {"status": "healthy", "service": "semantic-kernel-travel-agent"}
 
 
+@app.get("/.well-known/agent-card.json")
+async def get_well_known_agent_card():
+    """Expose the A2A Agent Card at the standard discovery path."""
+    if a2a_server:
+        return a2a_server._get_agent_card()
+    return {"error": "A2A server not initialized"}
+
+
 @app.get("/agent-card")
 async def get_agent_card():
-    """Expose the A2A Agent Card for discovery"""
+    """Backward-compatible alias for agent card discovery."""
     if a2a_server:
         return a2a_server._get_agent_card()
     return {"error": "A2A server not initialized"}

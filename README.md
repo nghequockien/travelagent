@@ -8,24 +8,28 @@ A standalone web application that combines Semantic Kernel AI agents with Google
 ## Features
 
 ### 🤖 AI-Powered Travel Assistant
+
 - **Currency Exchange**: Real-time exchange rates using the Frankfurter API
 - **Trip Planning**: Personalized itinerary creation and recommendations
 - **Activity Suggestions**: Curated local activities and attractions
 - **Dining Recommendations**: Restaurant suggestions based on budget and preferences
 
 ### 🌐 Modern Web Interface
+
 - **Responsive Design**: Works seamlessly on desktop and mobile devices
 - **Real-time Chat**: Interactive chat interface with typing indicators
 - **Streaming Responses**: Live streaming of AI responses for better UX
 - **Session Management**: Maintains conversation context across interactions
 
 ### 🔗 A2A Protocol Integration
+
 - **Agent Discovery**: Advertises capabilities through structured Agent Cards
 - **Task Coordination**: Supports multi-agent task delegation and coordination
 - **Streaming Support**: Full streaming capabilities for real-time interactions
 - **Protocol Compliance**: Fully compliant with Google's A2A specification
 
 ### ☁️ Azure-Ready Deployment
+
 - **App Service Optimized**: Configured for Azure App Service deployment
 - **Azure Developer CLI**: Complete AZD template for easy deployment
 - **Environment Management**: Secure handling of API keys and configuration
@@ -57,13 +61,14 @@ A standalone web application that combines Semantic Kernel AI agents with Google
 This implementation demonstrates a practical travel planning scenario using Semantic Kernel with A2A protocol integration:
 
 ### 🎯 **User Journey**
+
 Imagine a user wants a budget-friendly trip plan with currency conversion:
 
 1. **User Request**: "I am traveling to Seoul, South Korea for 2 days. I have a budget of $100 USD a day. How much is that in South Korean Won? What sort of things can I do and eat?"
 
 2. **TravelManager Analysis**: The main agent receives the request and detects both currency and activity planning needs
 
-3. **Multi-Agent Delegation**: 
+3. **Multi-Agent Delegation**:
    - **CurrencyExchangeAgent** is invoked to fetch live USD→KRW rates from Frankfurter API
    - **ActivityPlannerAgent** generates budget-friendly activity and dining recommendations
 
@@ -76,11 +81,13 @@ Imagine a user wants a budget-friendly trip plan with currency conversion:
    - Restaurant suggestions with price ranges
 
 ### 🔄 **Integration Flow**
+
 ![Semantic Kernel + A2A Integration](https://devblogs.microsoft.com/foundry/wp-content/uploads/sites/89/2025/04/1_mermaid_a2a.png)
 
-*Source: [Microsoft DevBlogs - Semantic Kernel A2A Integration](https://devblogs.microsoft.com/foundry/semantic-kernel-a2a-integration/)*
+_Source: [Microsoft DevBlogs - Semantic Kernel A2A Integration](https://devblogs.microsoft.com/foundry/semantic-kernel-a2a-integration/)_
 
 ### 🤝 **A2A Protocol Benefits**
+
 - **Agent Discovery**: Other A2A agents can discover and delegate travel tasks to your agent
 - **Task Coordination**: Seamless handoffs between specialized agents across different platforms
 - **Streaming Support**: Real-time progress updates during complex multi-agent workflows
@@ -99,6 +106,7 @@ Imagine a user wants a budget-friendly trip plan with currency conversion:
 ### Local Development
 
 1. **Clone and setup**:
+
    ```bash
    git clone <repository-url>
    cd semantic-kernel-travel-agent
@@ -108,17 +116,20 @@ Imagine a user wants a budget-friendly trip plan with currency conversion:
    ```
 
 2. **Configure environment**:
+
    ```bash
    cp .env.example .env
    # Edit .env with your configuration
    ```
 
 3. **Authenticate with Azure** (for Azure OpenAI without API key):
+
    ```bash
    az login
    ```
 
 4. **Run the application**:
+
    ```bash
    uvicorn main:app --reload --host 0.0.0.0 --port 8000
    ```
@@ -130,11 +141,13 @@ Imagine a user wants a budget-friendly trip plan with currency conversion:
 **✅ Ready to Deploy**: This application includes a complete Azure Developer CLI (AZD) template for one-command deployment.
 
 1. **Authenticate with Azure Developer CLI**:
-    ```bash
-    azd auth login
-    ```
+
+   ```bash
+   azd auth login
+   ```
 
 2. **Initialize and deploy**:
+
    ```bash
    azd up
    ```
@@ -149,6 +162,7 @@ Imagine a user wants a budget-friendly trip plan with currency conversion:
    - Example: `https://appweb-xxxxxxxxx.azurewebsites.net`
 
 **What gets deployed**:
+
 - ✅ Azure App Service Plan (P0V3 for production readiness)
 - ✅ Azure App Service with Python 3.11 runtime and managed identity
 - ✅ Azure OpenAI resource with `gpt-4.1-mini` model
@@ -195,29 +209,31 @@ The application uses a sophisticated multi-agent architecture powered by Semanti
 
 ### Environment Variables
 
-| Variable | Description | Required |
-|----------|-------------|----------|
-| `AZURE_OPENAI_ENDPOINT` | Azure OpenAI service endpoint | Yes (if using Azure OpenAI) |
-| `AZURE_OPENAI_API_KEY` | Azure OpenAI API key | No (uses managed identity in Azure, optional for local dev) |
-| `AZURE_OPENAI_DEPLOYMENT_NAME` | Azure OpenAI deployment name | Yes (if using Azure OpenAI) |
-| `AZURE_OPENAI_API_VERSION` | Azure OpenAI API version | Yes (if using Azure OpenAI) |
-| `OPENAI_API_KEY` | OpenAI API key | Yes (if using OpenAI) |
-| `OPENAI_MODEL_ID` | OpenAI model ID (e.g., gpt-4) | Yes (if using OpenAI) |
-| `HOST` | Application host (default: 0.0.0.0) | No |
-| `PORT` | Application port (default: 8000) | No |
-| `DEBUG` | Enable debug mode (default: false) | No |
+| Variable                       | Description                         | Required                                                    |
+| ------------------------------ | ----------------------------------- | ----------------------------------------------------------- |
+| `AZURE_OPENAI_ENDPOINT`        | Azure OpenAI service endpoint       | Yes (if using Azure OpenAI)                                 |
+| `AZURE_OPENAI_API_KEY`         | Azure OpenAI API key                | No (uses managed identity in Azure, optional for local dev) |
+| `AZURE_OPENAI_DEPLOYMENT_NAME` | Azure OpenAI deployment name        | Yes (if using Azure OpenAI)                                 |
+| `AZURE_OPENAI_API_VERSION`     | Azure OpenAI API version            | Yes (if using Azure OpenAI)                                 |
+| `OPENAI_API_KEY`               | OpenAI API key                      | Yes (if using OpenAI)                                       |
+| `OPENAI_MODEL_ID`              | OpenAI model ID (e.g., gpt-4)       | Yes (if using OpenAI)                                       |
+| `HOST`                         | Application host (default: 0.0.0.0) | No                                                          |
+| `PORT`                         | Application port (default: 8000)    | No                                                          |
+| `DEBUG`                        | Enable debug mode (default: false)  | No                                                          |
 
 ### Authentication
 
 This application uses **managed identity authentication** for Azure OpenAI when deployed to Azure, providing enhanced security without the need to manage API keys.
 
 **Authentication Methods**:
+
 - **Azure Deployment**: Uses system-assigned managed identity with automatic role assignment to "Cognitive Services OpenAI User"
-- **Local Development**: 
+- **Local Development**:
   - Option 1: Use Azure CLI credentials (`az login`) for keyless authentication
   - Option 2: Set `AZURE_OPENAI_API_KEY` in your local `.env` file for traditional API key authentication
 
 **For Azure OpenAI**:
+
 - Ensure your Azure OpenAI resource has the `gpt-4.1-mini` model deployed
 - API version `2025-01-01-preview` is recommended for latest features
 - The deployment automatically configures the necessary role assignments
@@ -237,17 +253,22 @@ chat_service = get_chat_completion_service(ChatServices.OPENAI)
 ## API Endpoints
 
 ### Web Interface
+
 - `GET /` - Main chat interface
 - `GET /health` - Health check endpoint
+- `GET /.well-known/agent-card.json` - Standard Agent Card discovery endpoint
+- `GET /agent-card` - Backward-compatible Agent Card alias
 
 ### Chat API
+
 - `POST /chat/message` - Send a message to the agent
 - `POST /chat/stream` - Stream a conversation with the agent
 - `GET /chat/sessions` - Get active chat sessions
 - `DELETE /chat/sessions/{session_id}` - Clear a chat session
 
 ### A2A Protocol
-- `GET /a2a/` - Agent discovery and capabilities
+
+- `GET /.well-known/agent-card.json` - Agent discovery and capabilities
 - `POST /a2a/tasks/send` - Send tasks to the agent
 - `POST /a2a/tasks/stream` - Stream tasks with real-time updates
 
@@ -277,6 +298,7 @@ semantic-kernel-travel-agent/
 ## Development
 
 ### Running the Application Locally
+
 ```bash
 # Activate virtual environment
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
@@ -286,6 +308,7 @@ uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### Testing the Agent
+
 Try these example queries in the web interface:
 
 1. **Currency Conversion**: "What's the current USD to EUR exchange rate?"
@@ -337,6 +360,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 ## Support
 
 For questions and support:
+
 - Create an issue in the repository
 - Check the [Semantic Kernel documentation](https://learn.microsoft.com/en-us/semantic-kernel/)
 - Review the [A2A protocol specification](https://google.github.io/A2A/)
