@@ -1,4 +1,5 @@
 import logging
+import os
 import httpx
 
 from a2a.server.apps import A2AStarletteApplication
@@ -40,6 +41,23 @@ class A2AServer:
         )
         
         logger.info(f"A2A server configured for {self.host}:{self.port}")
+
+    def _get_public_base_url(self) -> str:
+        """Return the public base URL used in the agent card."""
+        public_base_url = os.getenv("PUBLIC_BASE_URL")
+        if public_base_url:
+            return public_base_url.rstrip("/")
+
+        website_hostname = os.getenv("WEBSITE_HOSTNAME")
+        if website_hostname:
+            return f"https://{website_hostname}"
+
+        host = "localhost" if self.host in {"0.0.0.0", "::"} else self.host
+        if self.port == 443:
+            return f"https://{host}"
+        if self.port == 80:
+            return f"http://{host}"
+        return f"http://{host}:{self.port}"
     
     def _get_agent_card(self) -> AgentCard:
         """Returns the Agent Card for the Semantic Kernel Travel Agent."""
@@ -67,7 +85,7 @@ class A2AServer:
                 'Semantic Kernel-based travel agent providing comprehensive trip planning services '
                 'including currency exchange and personalized activity planning.'
             ),
-            url=f'http://{self.host}:{self.port}/',
+            url=f'{self._get_public_base_url()}/a2a/',
             version='1.0.0',
             defaultInputModes=['text'],
             defaultOutputModes=['text'],

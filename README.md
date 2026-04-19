@@ -269,8 +269,7 @@ chat_service = get_chat_completion_service(ChatServices.OPENAI)
 ### A2A Protocol
 
 - `GET /.well-known/agent-card.json` - Agent discovery and capabilities
-- `POST /a2a/tasks/send` - Send tasks to the agent
-- `POST /a2a/tasks/stream` - Stream tasks with real-time updates
+- `POST /a2a/` - Send JSON-RPC A2A requests such as `message/send`
 
 ## Project Structure
 
@@ -324,6 +323,31 @@ This application fully implements Google's Agent-to-Agent protocol:
 - **Task Coordination**: Supports complex multi-agent workflows
 - **Streaming**: Real-time streaming of responses and intermediate results
 - **Session Management**: Maintains context across multi-turn conversations
+
+### Direct A2A Request Example
+
+```bash
+curl -X POST "http://localhost:8000/a2a/" \
+   -H "Content-Type: application/json" \
+   -d '{
+      "jsonrpc": "2.0",
+      "id": "1",
+      "method": "message/send",
+      "params": {
+         "message": {
+            "kind": "message",
+            "messageId": "msg-1",
+            "role": "user",
+            "parts": [
+               {
+                  "kind": "text",
+                  "text": "Plan a 2-day budget trip to Seoul with 100 USD per day."
+               }
+            ]
+         }
+      }
+   }'
+```
 
 ### Agent Card Example
 
